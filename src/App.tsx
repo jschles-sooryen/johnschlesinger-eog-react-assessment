@@ -26,6 +26,7 @@ const theme = createTheme({
       default: 'rgb(226,231,238)',
     },
   },
+  spacing: 8,
 });
 
 const App = () => (
