@@ -10,14 +10,7 @@ const initialState = {
     oilTemp: null,
     waterTemp: null,
   },
-  historical: {
-    casingPressure: [],
-    injValveOpen: [],
-    tubingPressure: [],
-    flareTemp: [],
-    oilTemp: [],
-    waterTemp: [],
-  },
+  historical: [],
 };
 
 const measurementsReducer = (draft, action) => {
@@ -26,9 +19,7 @@ const measurementsReducer = (draft, action) => {
       draft.realTime[action.payload.metric] = action.payload;
       break;
     case SET_HISTORICAL_MEASUREMENT:
-      action.payload.forEach((m) => {
-        draft.historical[m.metric] = m.measurements;
-      });
+      draft.historical = action.payload;
       break;
     default:
       break;
