@@ -4,6 +4,7 @@ import { LinearProgress, Typography, Container } from '@material-ui/core';
 
 import MetricsSelect from './MetricsSelect';
 import MetricRealTimeInfo from './MetricRealTimeInfo';
+import MetricsLineChart from './MetricsLineChart';
 import { getMetricsQuery } from '../../graphql/queries';
 
 const Metrics = () => {
@@ -18,6 +19,7 @@ const Metrics = () => {
     <Container>
       <MetricsSelect options={metricsOptions} />
       <MetricRealTimeInfo />
+      <MetricsLineChart />
     </Container>
   );
 };

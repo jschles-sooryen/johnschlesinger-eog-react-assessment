@@ -1,5 +1,5 @@
 import { produce } from 'immer';
-import { SET_REAL_TIME_MEASUREMENT } from '../actions/types';
+import { SET_HISTORICAL_MEASUREMENT, SET_REAL_TIME_MEASUREMENT } from '../actions/types';
 
 const initialState = {
   realTime: {
@@ -24,6 +24,11 @@ const measurementsReducer = (draft, action) => {
   switch (action.type) {
     case SET_REAL_TIME_MEASUREMENT:
       draft.realTime[action.payload.metric] = action.payload;
+      break;
+    case SET_HISTORICAL_MEASUREMENT:
+      action.payload.forEach((m) => {
+        draft.historical[m.metric] = m.measurements;
+      });
       break;
     default:
       break;
