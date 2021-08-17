@@ -8,6 +8,7 @@ import { subMinutes } from 'date-fns';
 import {
   CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, XAxis, YAxis, Tooltip,
 } from 'recharts';
+import { toast } from 'react-toastify';
 import LoadingIndicator from '../../components/LoadingIndicator';
 import { getMeasurementsQuery } from '../../graphql/queries';
 import { setHistoricalMeasurement } from '../../store/actions';
@@ -44,15 +45,19 @@ const MetricsLineChart = () => {
   const getMeasurements = async () => {
     setLoading(true);
 
-    const response = await client.query({
-      query: getMeasurementsQuery,
-      variables: {
-        input: [...queryVariables],
-      },
-    });
+    try {
+      const response = await client.query({
+        query: getMeasurementsQuery,
+        variables: {
+          input: [...queryVariables],
+        },
+      });
 
-    if (response.data) {
-      dispatch(setHistoricalMeasurement(response.data.getMultipleMeasurements));
+      if (response.data) {
+        dispatch(setHistoricalMeasurement(response.data.getMultipleMeasurements));
+      }
+    } catch (e) {
+      toast(e?.message || 'Error: Failed to retrieve metric historical data.');
     }
 
     setLoading(false);

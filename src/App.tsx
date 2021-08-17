@@ -36,7 +36,7 @@ const App = () => (
         <Wrapper>
           <Header />
           <Metrics />
-          <ToastContainer />
+          <ToastContainer position="bottom-center" />
         </Wrapper>
       </MuiThemeProvider>
     </ApolloProvider>

@@ -20,7 +20,9 @@ const MetricsSelect = ({ options }) => {
   const { selectedMetrics } = useSelector((state) => state.metrics);
   const [isSelectOpen, setIsSelectOpen] = useState(false);
 
-  const metricOptions = options.filter((option) => !selectedMetrics.includes(option));
+  const metricOptions = (
+    (options && options.filter((option) => !selectedMetrics.includes(option))) || []
+  );
 
   const handleChange = (e) => {
     // last string in e.target.value array will be the added metric

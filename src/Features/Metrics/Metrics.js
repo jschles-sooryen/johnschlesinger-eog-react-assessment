@@ -1,6 +1,7 @@
 import React from 'react';
 import { useQuery } from '@apollo/client';
-import { Typography, Container } from '@material-ui/core';
+import { Container } from '@material-ui/core';
+import { toast } from 'react-toastify';
 
 import MetricsSelect from './MetricsSelect';
 import MetricRealTimeInfo from './MetricRealTimeInfo';
@@ -12,7 +13,9 @@ const Metrics = () => {
   const { loading, error, data } = useQuery(getMetricsQuery);
 
   if (loading) return <LoadingIndicator />;
-  if (error) return <Typography color="error">{error}</Typography>;
+  if (error) {
+    toast(error?.message || 'Error: Unable to retrieve metrics.');
+  }
 
   const metricsOptions = data?.getMetrics;
 
