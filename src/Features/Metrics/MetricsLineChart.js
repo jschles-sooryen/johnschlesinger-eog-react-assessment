@@ -60,7 +60,7 @@ const MetricsLineChart = () => {
 
   const getMeasurementChartData = () => {
     const allMeasurementData = [];
-    console.log('historical', historicalData);
+
     if (historicalData.length) {
       historicalData[0].measurements.forEach((meas) => {
         allMeasurementData.push({
@@ -85,7 +85,6 @@ const MetricsLineChart = () => {
       });
     }
 
-    console.log('merged', allMeasurementData);
     return allMeasurementData;
   };
 
@@ -124,7 +123,12 @@ const MetricsLineChart = () => {
       ) : (
         <Paper elevation={2} classes={{ root: classes.paperRoot }}>
           <ResponsiveContainer height={600}>
-            <LineChart data={getMeasurementChartData()}>
+            <LineChart
+              data={getMeasurementChartData()}
+              margin={{
+                top: 20, right: 20, bottom: 20, left: 20,
+              }}
+            >
               <XAxis dataKey="at" interval={225} />
               <CartesianGrid stroke="#f5f5f5" />
               <Tooltip filterNull={false} />
@@ -134,7 +138,7 @@ const MetricsLineChart = () => {
                   yAxisId={m.metric}
                   label={{
                     value: m.measurements[0].unit,
-                    position: 'insideLeft',
+                    position: 'insideTopLeft',
                     angle: -90,
                   }}
                 />
