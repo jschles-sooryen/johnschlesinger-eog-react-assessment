@@ -15,7 +15,7 @@ const initialState = {
 };
 
 const formatTimeMeasurements = (metric) => {
-  const formatted = metric.measurements.map((meas) => ({ ...meas, at: format(meas.at, 'hh:mm') }));
+  const formatted = metric.measurements.map((meas) => ({ ...meas, at: format(meas.at, 'h:mm') }));
   return formatted;
 };
 

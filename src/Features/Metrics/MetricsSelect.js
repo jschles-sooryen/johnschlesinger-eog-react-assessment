@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { arrayOf, string } from 'prop-types';
 import {
@@ -22,12 +22,6 @@ const MetricsSelect = ({ options }) => {
 
   const metricOptions = options.filter((option) => !selectedMetrics.includes(option));
 
-  useEffect(() => {
-    if (!metricOptions.length && isSelectOpen) {
-      setIsSelectOpen(false);
-    }
-  }, [selectedMetrics, metricOptions, isSelectOpen]);
-
   const handleChange = (e) => {
     // last string in e.target.value array will be the added metric
     const addedMetric = e.target.value[e.target.value.length - 1];
@@ -35,6 +29,8 @@ const MetricsSelect = ({ options }) => {
     if (addedMetric && !selectedMetrics.includes(addedMetric)) {
       dispatch(addSelectedMetric(addedMetric));
     }
+
+    setIsSelectOpen(false);
   };
 
   const handleOnDelete = (_, value) => {
