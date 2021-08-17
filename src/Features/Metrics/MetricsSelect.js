@@ -7,9 +7,10 @@ import {
 import { Cancel } from '@material-ui/icons';
 import { addSelectedMetric, removeSelectedMetric } from '../../store/actions';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     width: 755,
+    marginTop: theme.spacing(2),
   },
 }));
 

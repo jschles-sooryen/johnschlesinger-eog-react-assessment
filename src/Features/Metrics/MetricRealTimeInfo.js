@@ -18,6 +18,9 @@ const useStyles = makeStyles((theme) => ({
     marginRight: theme.spacing(2),
     marginBottom: theme.spacing(2),
   },
+  cardTitle: {
+    fontSize: 16,
+  },
 }));
 
 const MetricRealTimeInfo = () => {
@@ -52,7 +55,10 @@ const MetricRealTimeInfo = () => {
           classes={{ root: classes.cardRoot }}
         >
           <Card>
-            <CardHeader title={`${metric}:`} />
+            <CardHeader
+              title={`${metric}:`}
+              classes={{ title: classes.cardTitle }}
+            />
             <CardContent>
               <Typography>{value} {unit}</Typography>
               <Typography>{date}</Typography>
