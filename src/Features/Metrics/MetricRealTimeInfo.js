@@ -14,8 +14,8 @@ const useStyles = makeStyles((theme) => ({
   root: {
     marginTop: theme.spacing(2),
   },
-  cardRoot: {
-    marginRight: theme.spacing(2),
+  gridRoot: {
+    marginTop: theme.spacing(1),
     marginBottom: theme.spacing(2),
   },
   cardTitle: {
@@ -52,7 +52,7 @@ const MetricRealTimeInfo = () => {
         <Grid
           item
           key={metric}
-          classes={{ root: classes.cardRoot }}
+          xs={4}
         >
           <Card>
             <CardHeader
@@ -69,12 +69,16 @@ const MetricRealTimeInfo = () => {
     });
 
   return (
-    <Grid
-      container
-      classes={{ root: classes.root }}
-    >
-      {selectedMetricRealTimeInfo}
-    </Grid>
+    <div className={classes.root}>
+      <Typography variant="h6">Real Time Data:</Typography>
+      <Grid
+        container
+        classes={{ root: classes.gridRoot }}
+        spacing={2}
+      >
+        {selectedMetricRealTimeInfo}
+      </Grid>
+    </div>
   );
 };
 
