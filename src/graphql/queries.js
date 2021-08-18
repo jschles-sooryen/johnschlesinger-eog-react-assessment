@@ -6,17 +6,6 @@ export const getMetricsQuery = gql`
   }
 `;
 
-export const getLastKnownMeasurementQuery = gql`
-  query ($metricName: String!) {
-    getLastKnownMeasurement(metricName: $metricName) {
-      metric,
-      value,
-      at,
-      unit,
-    }
-  }
-`;
-
 export const getMeasurementsQuery = gql`
   query($input: [MeasurementQuery]) {
     getMultipleMeasurements(input: $input) {
