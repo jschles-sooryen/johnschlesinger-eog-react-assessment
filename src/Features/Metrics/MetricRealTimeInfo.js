@@ -2,12 +2,13 @@ import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useSubscription } from '@apollo/client';
 import {
-  Card, CardContent, Grid, LinearProgress, Typography, makeStyles,
+  Card, CardContent, Grid, Typography, makeStyles,
 } from '@material-ui/core';
 import { format } from 'date-fns';
 import { toast } from 'react-toastify';
 
 import CardHeader from '../../components/CardHeader';
+import LoadingIndicator from '../../components/LoadingIndicator';
 import { newMeasurementSubscription } from '../../graphql/subscriptions';
 import { setRealTimeMeasurement } from '../../store/actions';
 
@@ -34,7 +35,7 @@ const MetricRealTimeInfo = () => {
   const { selectedMetrics } = metrics;
   const realTimeMeasurements = measurements.realTime;
 
-  if (loading) return <LinearProgress />;
+  if (loading) return <LoadingIndicator />;
   if (error) {
     toast(error?.message || 'Error: Unable to retrieve real time metric data.');
     return null;
