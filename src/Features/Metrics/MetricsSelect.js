@@ -11,6 +11,9 @@ const useStyles = makeStyles((theme) => ({
   root: {
     width: 755,
     marginTop: theme.spacing(2),
+    [theme.breakpoints.down('xs')]: {
+      width: '100%',
+    },
   },
 }));
 

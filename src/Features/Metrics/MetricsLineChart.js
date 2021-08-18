@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {
-  Paper, Typography, makeStyles, Grid, Button,
+  Paper, Typography, makeStyles, Grid, Button, useMediaQuery,
 } from '@material-ui/core';
 import { useApolloClient } from '@apollo/client';
 import { subMinutes } from 'date-fns';
@@ -34,6 +34,7 @@ const metricChartLineColors = {
 
 const MetricsLineChart = () => {
   const dispatch = useDispatch();
+  const isMobile = useMediaQuery(theme => theme.breakpoints.down('xs'));
   const classes = useStyles();
   const [loading, setLoading] = useState(false);
   const { selectedMetrics } = useSelector((state) => state.metrics);
@@ -101,6 +102,8 @@ const MetricsLineChart = () => {
 
   if (!selectedMetrics.length) return null;
 
+  const chartMargin = isMobile ? 5 : 20;
+
   return (
     <div>
       <Grid
@@ -131,7 +134,10 @@ const MetricsLineChart = () => {
             <LineChart
               data={getMeasurementChartData()}
               margin={{
-                top: 20, right: 20, bottom: 20, left: 20,
+                top: chartMargin,
+                right: chartMargin,
+                bottom: chartMargin,
+                left: chartMargin,
               }}
             >
               <XAxis dataKey="at" interval={225} />

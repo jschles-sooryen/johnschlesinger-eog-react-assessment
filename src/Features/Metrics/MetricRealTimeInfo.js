@@ -2,7 +2,7 @@ import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useSubscription } from '@apollo/client';
 import {
-  Card, CardContent, Grid, Typography, makeStyles,
+  Card, CardContent, Grid, Typography, makeStyles, useMediaQuery,
 } from '@material-ui/core';
 import { format } from 'date-fns';
 import { toast } from 'react-toastify';
@@ -28,6 +28,7 @@ const useStyles = makeStyles((theme) => ({
 const MetricRealTimeInfo = () => {
   const dispatch = useDispatch();
   const classes = useStyles();
+  const isMobile = useMediaQuery(theme => theme.breakpoints.down('xs'));
   const {
     data, error, loading,
   } = useSubscription(newMeasurementSubscription);
@@ -57,7 +58,7 @@ const MetricRealTimeInfo = () => {
         <Grid
           item
           key={metric}
-          xs={4}
+          xs={isMobile ? 12 : 4}
         >
           <Card>
             <CardHeader
@@ -78,6 +79,7 @@ const MetricRealTimeInfo = () => {
       <Typography variant="h6">Real Time Data:</Typography>
       <Grid
         container
+        direction={isMobile ? 'column' : 'row'}
         classes={{ root: classes.gridRoot }}
         spacing={2}
       >
