@@ -5,6 +5,7 @@ import {
   Card, CardContent, Grid, LinearProgress, Typography, makeStyles,
 } from '@material-ui/core';
 import { format } from 'date-fns';
+import { toast } from 'react-toastify';
 
 import CardHeader from '../../components/CardHeader';
 import { newMeasurementSubscription } from '../../graphql/subscriptions';
@@ -34,7 +35,10 @@ const MetricRealTimeInfo = () => {
   const realTimeMeasurements = measurements.realTime;
 
   if (loading) return <LinearProgress />;
-  if (error) return <Typography color="error">{error}</Typography>;
+  if (error) {
+    toast(error?.message || 'Error: Unable to retrieve real time metric data.');
+    return null;
+  }
 
   // Update store when new subscription data is received
   dispatch(setRealTimeMeasurement(data.newMeasurement));
