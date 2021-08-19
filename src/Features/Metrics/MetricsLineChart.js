@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {
   Paper, Typography, makeStyles, Grid, Button, useMediaQuery,
@@ -12,6 +12,7 @@ import { toast } from 'react-toastify';
 import LoadingIndicator from '../../components/LoadingIndicator';
 import { getMeasurementsQuery } from '../../graphql/queries';
 import { setHistoricalMeasurement } from '../../store/actions';
+import useInterval from '../../util/hooks/useInterval';
 
 const useStyles = makeStyles((theme) => ({
   paperRoot: {
@@ -99,6 +100,10 @@ const MetricsLineChart = () => {
       getMeasurements();
     }
   }, [selectedMetrics]);
+
+  useInterval(() => {
+    getMeasurements();
+  }, selectedMetrics.length ? 8000 : null);
 
   if (!selectedMetrics.length) return null;
 
