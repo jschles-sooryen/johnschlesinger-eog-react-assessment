@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, FC } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {
-  Paper, Typography, makeStyles, Grid, Button, useMediaQuery,
+  Paper, Typography, makeStyles, Grid, Button, useMediaQuery, Theme,
 } from '@material-ui/core';
 import { useApolloClient } from '@apollo/client';
 import { subMinutes } from 'date-fns';
@@ -9,10 +9,13 @@ import {
   CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, XAxis, YAxis, Tooltip,
 } from 'recharts';
 import { toast } from 'react-toastify';
-import LoadingIndicator from '../../components/LoadingIndicator';
-import { getMeasurementsQuery } from '../../graphql/queries';
-import { setHistoricalMeasurement } from '../../store/actions';
-import useInterval from '../../util/hooks/useInterval';
+import LoadingIndicator from '../../../components/LoadingIndicator';
+import { getMeasurementsQuery } from '../../../graphql/queries';
+import { setHistoricalMeasurement } from '../../../store/actions';
+import useInterval from '../../../util/hooks/useInterval';
+
+import { RootState } from '../../../store';
+import { Measurement, ChartMeasurement } from '../types';
 
 const useStyles = makeStyles((theme) => ({
   paperRoot: {
@@ -24,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 // Colors taken from https://react.eogresources.com/dashboard
-const metricChartLineColors = {
+const metricChartLineColors: { [key: string]: any } = {
   casingPressure: 'rgb(88, 24, 69)',
   injValveOpen: 'rgb(199, 0, 57)',
   tubingPressure: 'rgb(255, 87, 51)',
@@ -33,13 +36,16 @@ const metricChartLineColors = {
   waterTemp: 'rgb(218, 247, 166)',
 };
 
-const MetricsLineChart = () => {
+const metricsState = (state: RootState) => state.metrics;
+const historicalDataState = (state: RootState) => state.measurements.historical;
+
+const MetricsLineChart: FC = () => {
   const dispatch = useDispatch();
-  const isMobile = useMediaQuery(theme => theme.breakpoints.down('xs'));
+  const isMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down('xs'));
   const classes = useStyles();
   const [loading, setLoading] = useState(false);
-  const { selectedMetrics } = useSelector((state) => state.metrics);
-  const historicalData = useSelector((state) => state.measurements.historical);
+  const { selectedMetrics } = useSelector(metricsState);
+  const historicalData = useSelector(historicalDataState);
   const client = useApolloClient();
   const lastThirtyMinutes = subMinutes(new Date(), 30).valueOf();
   const queryVariables = selectedMetrics.map((m) => ({ metricName: m, after: lastThirtyMinutes }));
@@ -66,10 +72,10 @@ const MetricsLineChart = () => {
   };
 
   const getMeasurementChartData = () => {
-    const allMeasurementData = [];
+    const allMeasurementData: ChartMeasurement[] = [];
 
     if (historicalData.length) {
-      historicalData[0].measurements.forEach((meas) => {
+      historicalData[0].measurements.forEach((meas: Measurement) => {
         allMeasurementData.push({
           at: meas.at,
           [meas.metric]: meas.value,
@@ -82,10 +88,10 @@ const MetricsLineChart = () => {
        entries based on the timestamp. This allows us to pair multiple metrics with the
        same times on the x-axis.
       */
-      allMeasurementData.forEach((meas) => {
+      allMeasurementData.forEach((meas: ChartMeasurement) => {
         historicalData.forEach((metric) => {
           if (metric.metric !== historicalData[0].metric) {
-            const otherMetric = metric.measurements.find(m => m.at === meas.at);
+            const otherMetric = metric.measurements.find((m: Measurement) => m.at === meas.at);
             meas[metric.metric] = otherMetric.value;
           }
         });

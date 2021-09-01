@@ -1,16 +1,19 @@
-import React from 'react';
+import React, { FC } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useSubscription } from '@apollo/client';
 import {
-  Card, CardContent, Grid, Typography, makeStyles, useMediaQuery,
+  Card, CardContent, Grid, Typography, makeStyles, useMediaQuery, Theme,
 } from '@material-ui/core';
 import { format } from 'date-fns';
 import { toast } from 'react-toastify';
 
-import CardHeader from '../../components/CardHeader';
-import LoadingIndicator from '../../components/LoadingIndicator';
-import { newMeasurementSubscription } from '../../graphql/subscriptions';
-import { setRealTimeMeasurement } from '../../store/actions';
+import CardHeader from '../../../components/CardHeader';
+import LoadingIndicator from '../../../components/LoadingIndicator';
+import { newMeasurementSubscription } from '../../../graphql/subscriptions';
+import { setRealTimeMeasurement } from '../../../store/actions';
+
+import { RootState } from '../../../store';
+import { Measurement } from '../types';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -25,16 +28,18 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const MetricRealTimeInfo = () => {
+const metricsMeasurementsState = (state: RootState) => state;
+
+const MetricRealTimeInfo: FC = () => {
   const dispatch = useDispatch();
   const classes = useStyles();
-  const isMobile = useMediaQuery(theme => theme.breakpoints.down('xs'));
+  const isMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down('xs'));
   const {
     data, error, loading,
   } = useSubscription(newMeasurementSubscription);
-  const { metrics, measurements } = useSelector((state) => state);
+  const { metrics, measurements } = useSelector(metricsMeasurementsState);
   const { selectedMetrics } = metrics;
-  const realTimeMeasurements = measurements.realTime;
+  const realTimeMeasurements: { [key: string]: any } = measurements.realTime;
 
   if (loading) return <LoadingIndicator />;
   if (error) {
@@ -50,7 +55,7 @@ const MetricRealTimeInfo = () => {
     .map((result) => {
       const {
         metric, at, unit, value,
-      } = realTimeMeasurements[result];
+      } = realTimeMeasurements[result] as Measurement;
 
       const date = format(new Date(at), "MMMM do yyyy '@' h:mm a");
 
@@ -76,7 +81,9 @@ const MetricRealTimeInfo = () => {
 
   return (
     <div className={classes.root}>
-      <Typography variant="h6">Real Time Data:</Typography>
+      {!!selectedMetricRealTimeInfo.length && (
+        <Typography variant="h6">Real Time Data:</Typography>
+      )}
       <Grid
         container
         direction={isMobile ? 'column' : 'row'}

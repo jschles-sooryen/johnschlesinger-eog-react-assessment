@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { FC } from 'react';
 import { CircularProgress, Grid } from '@material-ui/core';
 
-const LoadingIndicator = () => (
+const LoadingIndicator: FC = () => (
   <Grid
     container
     alignItems="center"

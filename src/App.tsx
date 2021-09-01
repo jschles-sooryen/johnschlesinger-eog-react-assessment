@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FC } from 'react';
 import { ToastContainer } from 'react-toastify';
 import { ApolloProvider } from '@apollo/client';
 import { Provider } from 'react-redux';
@@ -8,7 +8,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 import Header from './components/Header';
 import Wrapper from './components/Wrapper';
-import Metrics from './Features/Metrics/Metrics';
+import Metrics from './Features/Metrics';
 
 import store from './store';
 import graphQLClient from './graphql/client';
@@ -28,7 +28,7 @@ const theme = createTheme({
   spacing: 8,
 });
 
-const App = () => (
+const App: FC = () => (
   <Provider store={store}>
     <ApolloProvider client={graphQLClient}>
       <MuiThemeProvider theme={theme}>
