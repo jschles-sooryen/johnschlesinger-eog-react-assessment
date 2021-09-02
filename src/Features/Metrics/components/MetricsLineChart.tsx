@@ -12,7 +12,6 @@ import { toast } from 'react-toastify';
 import LoadingIndicator from '../../../components/LoadingIndicator';
 import { getMeasurementsQuery } from '../../../graphql/queries';
 import { setHistoricalMeasurement } from '../../../store/actions';
-import useInterval from '../../../util/hooks/useInterval';
 
 import { RootState } from '../../../store';
 import { Measurement, ChartMeasurement } from '../types';
@@ -44,6 +43,7 @@ const MetricsLineChart: FC = () => {
   const isMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down('xs'));
   const classes = useStyles();
   const [loading, setLoading] = useState(false);
+  const [subscription, setSubscription] = useState({});
   const { selectedMetrics } = useSelector(metricsState);
   const historicalData = useSelector(historicalDataState);
   const client = useApolloClient();
@@ -53,19 +53,34 @@ const MetricsLineChart: FC = () => {
   const getMeasurements = async () => {
     setLoading(true);
 
+    const getErrorMessage = (error: Error) => toast(error?.message || 'Error: Failed to retrieve metric historical data.');
+
+    if (Object.keys(subscription).length) {
+      (subscription as ZenObservable.Subscription).unsubscribe();
+    }
+
     try {
-      const response = await client.query({
+      const observableQuery = await client.watchQuery({
         query: getMeasurementsQuery,
         variables: {
           input: [...queryVariables],
         },
+        pollInterval: 8000,
       });
 
-      if (response.data) {
-        dispatch(setHistoricalMeasurement(response.data.getMultipleMeasurements));
-      }
+      const querySubscription = await observableQuery.subscribe({
+        next: ({ data }) => {
+          if (data) {
+            setSubscription(querySubscription);
+            dispatch(setHistoricalMeasurement(data.getMultipleMeasurements));
+          }
+        },
+        error: (e) => {
+          getErrorMessage(e);
+        },
+      });
     } catch (e) {
-      toast(e?.message || 'Error: Failed to retrieve metric historical data.');
+      getErrorMessage(e);
     }
 
     setLoading(false);
@@ -107,31 +122,18 @@ const MetricsLineChart: FC = () => {
     }
   }, [selectedMetrics]);
 
-  useInterval(() => {
-    getMeasurements();
-  }, selectedMetrics.length ? 8000 : null);
-
   if (!selectedMetrics.length) return null;
 
   const chartMargin = isMobile ? 5 : 20;
 
   return (
     <div>
-      <Grid
-        classes={{ root: classes.flexContainer }}
-        container
-        alignItems="center"
-        justifyContent="space-between"
-      >
+      <Grid classes={{ root: classes.flexContainer }} container alignItems="center" justifyContent="space-between">
         <Grid item>
           <Typography variant="h6">Last 30 Minutes:</Typography>
         </Grid>
         <Grid item>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={getMeasurements}
-          >
+          <Button variant="contained" color="primary" onClick={getMeasurements}>
             Refresh
           </Button>
         </Grid>
