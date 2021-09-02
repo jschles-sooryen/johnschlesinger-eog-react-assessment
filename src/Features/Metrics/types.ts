@@ -17,3 +17,12 @@ export interface ChartMeasurement {
 export type GetMetricsResponse = {
   getMetrics: string[];
 };
+
+export type GetMultipleMeasurementsData = {
+  metric: string;
+  measurements: Measurement[];
+};
+
+export type GetMultipleMeasurementsResponse = {
+  getMultipleMeasurements: GetMultipleMeasurementsData;
+};

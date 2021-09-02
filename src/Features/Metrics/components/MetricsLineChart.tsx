@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import {
   Paper, Typography, makeStyles, Grid, Button, useMediaQuery, Theme,
 } from '@material-ui/core';
-import { useApolloClient } from '@apollo/client';
+import { ApolloQueryResult, useApolloClient } from '@apollo/client';
 import { subMinutes } from 'date-fns';
 import {
   CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, XAxis, YAxis, Tooltip,
@@ -14,7 +14,7 @@ import { getMeasurementsQuery } from '../../../graphql/queries';
 import { setHistoricalMeasurement } from '../../../store/actions';
 
 import { RootState } from '../../../store';
-import { Measurement, ChartMeasurement } from '../types';
+import { Measurement, ChartMeasurement, GetMultipleMeasurementsResponse } from '../types';
 
 const useStyles = makeStyles((theme) => ({
   paperRoot: {
@@ -69,7 +69,7 @@ const MetricsLineChart: FC = () => {
       });
 
       const querySubscription = await observableQuery.subscribe({
-        next: ({ data }) => {
+        next: ({ data }: ApolloQueryResult<GetMultipleMeasurementsResponse>) => {
           if (data) {
             setSubscription(querySubscription);
             dispatch(setHistoricalMeasurement(data.getMultipleMeasurements));
