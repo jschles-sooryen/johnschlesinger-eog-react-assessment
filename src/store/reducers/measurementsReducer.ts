@@ -13,14 +13,7 @@ type MeasurementsState = {
 };
 
 const initialState = {
-  realTime: {
-    casingPressure: null,
-    injValveOpen: null,
-    tubingPressure: null,
-    flareTemp: null,
-    oilTemp: null,
-    waterTemp: null,
-  },
+  realTime: {},
   historical: [],
 };
 
