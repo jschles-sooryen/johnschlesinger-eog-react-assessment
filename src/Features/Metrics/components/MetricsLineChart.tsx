@@ -14,7 +14,9 @@ import { getMeasurementsQuery } from '../../../graphql/queries';
 import { setHistoricalMeasurement } from '../../../store/actions';
 
 import { RootState } from '../../../store';
-import { Measurement, ChartMeasurement, GetMultipleMeasurementsResponse, GetMultipleMeasurementsData } from '../types';
+import {
+  Measurement, ChartMeasurement, GetMultipleMeasurementsResponse, GetMultipleMeasurementsData,
+} from '../types';
 
 const useStyles = makeStyles((theme) => ({
   paperRoot: {
