@@ -1,13 +1,16 @@
 import React, { ChangeEvent, useState, FC } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useQuery } from '@apollo/client';
 import {
   Select, MenuItem, InputLabel, Chip, FormControl, makeStyles,
 } from '@material-ui/core';
 import { Cancel } from '@material-ui/icons';
+import { toast } from 'react-toastify';
+import LoadingIndicator from '../../../components/LoadingIndicator';
 import { addSelectedMetric, removeSelectedMetric } from '../../../store/actions';
-
 import { RootState } from '../../../store';
-import { MetricSelectProps } from '../types';
+import { GetMetricsResponse } from '../types';
+import { getMetricsQuery } from '../../../graphql/queries';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -21,9 +24,12 @@ const useStyles = makeStyles((theme) => ({
 
 const metricsState = (state: RootState) => state.metrics;
 
-const MetricsSelect: FC<MetricSelectProps> = ({ options }: MetricSelectProps) => {
+const MetricsSelect: FC = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
+  const { loading, error, data } = useQuery<GetMetricsResponse>(getMetricsQuery);
+
+  const options = data?.getMetrics || [];
   const { selectedMetrics } = useSelector(metricsState);
   const [isSelectOpen, setIsSelectOpen] = useState(false);
 
@@ -54,6 +60,11 @@ const MetricsSelect: FC<MetricSelectProps> = ({ options }: MetricSelectProps) =>
   const handleClose = () => {
     setIsSelectOpen(false);
   };
+
+  if (loading) return <LoadingIndicator />;
+  if (error) {
+    toast(error?.message || 'Error: Unable to retrieve metrics.');
+  }
 
   return (
     <FormControl classes={{ root: classes.root }}>

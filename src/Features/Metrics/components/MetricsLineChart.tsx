@@ -120,36 +120,6 @@ const MetricsLineChart: FC = () => {
     setLoading(false);
   };
 
-  // const getMeasurementChartData = () => {
-  //   const allMeasurementData: ChartMeasurement[] = [];
-
-  //   if (historicalData.length) {
-  //     historicalData[0].measurements.forEach((meas: Measurement) => {
-  //       allMeasurementData.push({
-  //         at: meas.at,
-  //         [meas.metric]: meas.value,
-  //       });
-  //     });
-
-  //     /*
-  //      When more than one metric is selected, we need to take each instance of measurement
-  //      data of those other metrics and add them to the existing allMeasurement data
-  //      entries based on the timestamp. This allows us to pair multiple metrics with the
-  //      same times on the x-axis.
-  //     */
-  //     allMeasurementData.forEach((meas: ChartMeasurement) => {
-  //       historicalData.forEach((metric: GetMultipleMeasurementsData) => {
-  //         if (metric.metric !== historicalData[0].metric) {
-  //           const otherMetric = metric.measurements.find((m: Measurement) => m.at === meas.at)!;
-  //           meas[metric.metric] = otherMetric.value;
-  //         }
-  //       });
-  //     });
-  //   }
-
-  //   return allMeasurementData;
-  // };
-
   useEffect(() => {
     if (selectedMetrics.length) {
       getMeasurements();
