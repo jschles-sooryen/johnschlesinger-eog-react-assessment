@@ -40,6 +40,35 @@ const metricChartLineColors: { [key: string]: any } = {
 const metricsState = (state: RootState) => state.metrics;
 const historicalDataState = (state: RootState) => state.measurements.historical;
 
+const chartDataSelector = (state: RootState): ChartMeasurement[] => {
+  const historicalData = state.measurements.historical;
+  let formattedChartData: ChartMeasurement[] = [];
+
+  if (historicalData.length) {
+    formattedChartData = historicalData[0].measurements.map((meas: Measurement) => ({
+      at: meas.at,
+      [meas.metric]: meas.value,
+    }));
+
+    /*
+     When more than one metric is selected, we need to take each instance of measurement
+     data of those other metrics and add them to the existing allMeasurement data
+     entries based on the timestamp. This allows us to pair multiple metrics with the
+     same times on the x-axis.
+    */
+    formattedChartData.forEach((meas: ChartMeasurement) => {
+      historicalData.forEach((metric: GetMultipleMeasurementsData) => {
+        if (metric.metric !== historicalData[0].metric) {
+          const otherMetric = metric.measurements.find((m: Measurement) => m.at === meas.at)!;
+          meas[metric.metric] = otherMetric.value;
+        }
+      });
+    });
+  }
+
+  return formattedChartData;
+};
+
 const MetricsLineChart: FC = () => {
   const dispatch = useDispatch();
   const isMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down('xs'));
@@ -48,11 +77,14 @@ const MetricsLineChart: FC = () => {
   const [subscription, setSubscription] = useState({});
   const { selectedMetrics } = useSelector(metricsState);
   const historicalData = useSelector(historicalDataState);
+  const chartData = useSelector(chartDataSelector);
   const client = useApolloClient();
   const lastThirtyMinutes = subMinutes(new Date(), 30).valueOf();
   const queryVariables = selectedMetrics.map((m) => ({ metricName: m, after: lastThirtyMinutes }));
 
   const getMeasurements = async () => {
+    if (!queryVariables.length) return;
+
     setLoading(true);
 
     const getErrorMessage = (error: Error) => toast(error?.message || 'Error: Failed to retrieve metric historical data.');
@@ -88,35 +120,35 @@ const MetricsLineChart: FC = () => {
     setLoading(false);
   };
 
-  const getMeasurementChartData = () => {
-    const allMeasurementData: ChartMeasurement[] = [];
+  // const getMeasurementChartData = () => {
+  //   const allMeasurementData: ChartMeasurement[] = [];
 
-    if (historicalData.length) {
-      historicalData[0].measurements.forEach((meas: Measurement) => {
-        allMeasurementData.push({
-          at: meas.at,
-          [meas.metric]: meas.value,
-        });
-      });
+  //   if (historicalData.length) {
+  //     historicalData[0].measurements.forEach((meas: Measurement) => {
+  //       allMeasurementData.push({
+  //         at: meas.at,
+  //         [meas.metric]: meas.value,
+  //       });
+  //     });
 
-      /*
-       When more than one metric is selected, we need to take each instance of measurement
-       data of those other metrics and add them to the existing allMeasurement data
-       entries based on the timestamp. This allows us to pair multiple metrics with the
-       same times on the x-axis.
-      */
-      allMeasurementData.forEach((meas: ChartMeasurement) => {
-        historicalData.forEach((metric: GetMultipleMeasurementsData) => {
-          if (metric.metric !== historicalData[0].metric) {
-            const otherMetric = metric.measurements.find((m: Measurement) => m.at === meas.at)!;
-            meas[metric.metric] = otherMetric.value;
-          }
-        });
-      });
-    }
+  //     /*
+  //      When more than one metric is selected, we need to take each instance of measurement
+  //      data of those other metrics and add them to the existing allMeasurement data
+  //      entries based on the timestamp. This allows us to pair multiple metrics with the
+  //      same times on the x-axis.
+  //     */
+  //     allMeasurementData.forEach((meas: ChartMeasurement) => {
+  //       historicalData.forEach((metric: GetMultipleMeasurementsData) => {
+  //         if (metric.metric !== historicalData[0].metric) {
+  //           const otherMetric = metric.measurements.find((m: Measurement) => m.at === meas.at)!;
+  //           meas[metric.metric] = otherMetric.value;
+  //         }
+  //       });
+  //     });
+  //   }
 
-    return allMeasurementData;
-  };
+  //   return allMeasurementData;
+  // };
 
   useEffect(() => {
     if (selectedMetrics.length) {
@@ -147,7 +179,7 @@ const MetricsLineChart: FC = () => {
         <Paper elevation={2} classes={{ root: classes.paperRoot }}>
           <ResponsiveContainer height={600}>
             <LineChart
-              data={getMeasurementChartData()}
+              data={chartData}
               margin={{
                 top: chartMargin,
                 right: chartMargin,
