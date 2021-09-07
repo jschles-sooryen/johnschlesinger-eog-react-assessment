@@ -8,10 +8,7 @@ type RealTimeState = {
   [key: string]: Measurement | null;
 };
 
-const initialState = {
-  realTime: {},
-  historical: [],
-};
+const initialState = {};
 
 const realTimeReducer = <T extends RealTimeState>(draft: Draft<T>, action: AnyAction) => {
   switch (action.type) {

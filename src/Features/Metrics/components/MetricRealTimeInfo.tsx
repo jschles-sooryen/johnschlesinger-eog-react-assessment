@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useSubscription } from '@apollo/client';
 import {
   Card, CardContent, Grid, Typography, makeStyles, useMediaQuery, Theme,
@@ -12,8 +12,7 @@ import LoadingIndicator from '../../../components/LoadingIndicator';
 import { newMeasurementSubscription } from '../../../graphql/subscriptions';
 import { setRealTimeMeasurement } from '../../../store/actions';
 
-import { RootState } from '../../../store';
-import { Measurement } from '../types';
+import { Measurement, MetricsRealTimeInfoProps } from '../types';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -28,13 +27,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const metricsState = (state: RootState) => state.metrics;
-const realTimeState = (state: RootState) => state.realTime;
-
-const MetricRealTimeInfo: FC = () => {
+const MetricRealTimeInfo: FC<MetricsRealTimeInfoProps> = (
+  { realTimeMeasurements, selectedMetrics }: MetricsRealTimeInfoProps,
+) => {
   const dispatch = useDispatch();
-  const { selectedMetrics } = useSelector(metricsState);
-  const realTimeMeasurements = useSelector(realTimeState);
   const classes = useStyles();
   const isMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down('xs'));
   const {

@@ -1,5 +1,15 @@
-export interface MetricSelectProps {
+export interface SelectedMetricsProps {
+  selectedMetrics: string[];
+}
+
+export interface MetricsSelectProps extends SelectedMetricsProps {
   options: string[];
+}
+
+export interface MetricsRealTimeInfoProps extends SelectedMetricsProps {
+  realTimeMeasurements: {
+    [key: string]: Measurement | null;
+  }
 }
 
 export interface Measurement {
