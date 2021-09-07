@@ -15,7 +15,11 @@ import { setHistoricalMeasurement } from '../../../store/actions';
 
 import { RootState } from '../../../store';
 import {
-  Measurement, ChartMeasurement, GetMultipleMeasurementsResponse, GetMultipleMeasurementsData,
+  Measurement,
+  ChartMeasurement,
+  GetMultipleMeasurementsResponse,
+  GetMultipleMeasurementsData,
+  SelectedMetricsProps,
 } from '../types';
 
 const useStyles = makeStyles((theme) => ({
@@ -37,7 +41,6 @@ const metricChartLineColors: { [key: string]: any } = {
   waterTemp: 'rgb(218, 247, 166)',
 };
 
-const metricsState = (state: RootState) => state.metrics;
 const historicalDataState = (state: RootState) => state.historical.measurements;
 
 const chartDataSelector = (state: RootState): ChartMeasurement[] => {
@@ -69,13 +72,14 @@ const chartDataSelector = (state: RootState): ChartMeasurement[] => {
   return formattedChartData;
 };
 
-const MetricsLineChart: FC = () => {
+const MetricsLineChart: FC<SelectedMetricsProps> = (
+  { selectedMetrics }: SelectedMetricsProps,
+) => {
   const dispatch = useDispatch();
   const isMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down('xs'));
   const classes = useStyles();
   const [loading, setLoading] = useState(false);
   const [subscription, setSubscription] = useState({});
-  const { selectedMetrics } = useSelector(metricsState);
   const historicalData = useSelector(historicalDataState);
   const chartData = useSelector(chartDataSelector);
   const client = useApolloClient();

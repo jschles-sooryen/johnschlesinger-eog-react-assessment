@@ -33,18 +33,17 @@ const MetricRealTimeInfo: FC<MetricsRealTimeInfoProps> = (
   const dispatch = useDispatch();
   const classes = useStyles();
   const isMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down('xs'));
-  const {
-    data, error, loading,
-  } = useSubscription(newMeasurementSubscription);
+  const { error, loading } = useSubscription(newMeasurementSubscription, {
+    onSubscriptionData: ({ subscriptionData }) => {
+      dispatch(setRealTimeMeasurement(subscriptionData.data.newMeasurement));
+    },
+  });
 
   if (loading) return <LoadingIndicator />;
   if (error) {
     toast(error?.message || 'Error: Unable to retrieve real time metric data.');
     return null;
   }
-
-  // Update store when new subscription data is received
-  dispatch(setRealTimeMeasurement(data.newMeasurement));
 
   const selectedMetricRealTimeInfo = Object.keys(realTimeMeasurements)
     .filter((metric) => selectedMetrics.includes(metric))

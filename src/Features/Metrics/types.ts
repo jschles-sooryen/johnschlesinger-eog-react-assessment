@@ -12,6 +12,11 @@ export interface MetricsRealTimeInfoProps extends SelectedMetricsProps {
   }
 }
 
+export interface MetricsLineChartProps extends SelectedMetricsProps {
+  chartData: ChartMeasurement[];
+  historicalData: GetMultipleMeasurementsData;
+}
+
 export interface Measurement {
   metric: string;
   at: number;

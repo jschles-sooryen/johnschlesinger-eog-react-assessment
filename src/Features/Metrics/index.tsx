@@ -30,14 +30,17 @@ const Metrics: FC = () => {
 
   return (
     <Container>
-      <MetricsSelect options={options} selectedMetrics={selectedMetrics} />
+      <MetricsSelect
+        options={options}
+        selectedMetrics={selectedMetrics}
+      />
       {!!selectedMetrics.length && (
         <>
           <MetricRealTimeInfo
             selectedMetrics={selectedMetrics}
             realTimeMeasurements={realTimeMeasurements}
           />
-          <MetricsLineChart />
+          <MetricsLineChart selectedMetrics={selectedMetrics} />
         </>
       )}
     </Container>
