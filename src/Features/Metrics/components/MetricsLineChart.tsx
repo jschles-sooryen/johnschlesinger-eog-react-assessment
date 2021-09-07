@@ -38,10 +38,10 @@ const metricChartLineColors: { [key: string]: any } = {
 };
 
 const metricsState = (state: RootState) => state.metrics;
-const historicalDataState = (state: RootState) => state.measurements.historical;
+const historicalDataState = (state: RootState) => state.historical.measurements;
 
 const chartDataSelector = (state: RootState): ChartMeasurement[] => {
-  const historicalData = state.measurements.historical;
+  const historicalData = state.historical.measurements;
   let formattedChartData: ChartMeasurement[] = [];
 
   if (historicalData.length) {
@@ -113,7 +113,7 @@ const MetricsLineChart: FC = () => {
           getErrorMessage(e);
         },
       });
-    } catch (e) {
+    } catch (e: any) {
       getErrorMessage(e);
     }
 

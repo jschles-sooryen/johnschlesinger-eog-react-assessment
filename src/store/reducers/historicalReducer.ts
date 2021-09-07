@@ -1,20 +1,16 @@
 import { produce, Draft } from 'immer';
 import { format } from 'date-fns';
 import { AnyAction } from 'redux';
-import { SET_HISTORICAL_MEASUREMENT, SET_REAL_TIME_MEASUREMENT } from '../actions/types';
+import { SET_HISTORICAL_MEASUREMENT } from '../actions/types';
 
 import { GetMultipleMeasurementsData, Measurement, ChartMeasurement } from '../../Features/Metrics/types';
 
-type MeasurementsState = {
-  realTime: {
-    [key: string]: Measurement | null;
-  };
-  historical: ChartMeasurement[];
+type HistoricalState = {
+  measurements: ChartMeasurement[];
 };
 
 const initialState = {
-  realTime: {},
-  historical: [],
+  measurements: [],
 };
 
 const formatTimeMeasurements = (metric: GetMultipleMeasurementsData) => {
@@ -22,13 +18,10 @@ const formatTimeMeasurements = (metric: GetMultipleMeasurementsData) => {
   return formatted;
 };
 
-const measurementsReducer = <T extends MeasurementsState>(draft: Draft<T>, action: AnyAction) => {
+const measurementsReducer = <T extends HistoricalState>(draft: Draft<T>, action: AnyAction) => {
   switch (action.type) {
-    case SET_REAL_TIME_MEASUREMENT:
-      draft.realTime[action.payload.metric] = action.payload;
-      break;
     case SET_HISTORICAL_MEASUREMENT:
-      draft.historical = action.payload.map((metric: GetMultipleMeasurementsData) => ({
+      draft.measurements = action.payload.map((metric: GetMultipleMeasurementsData) => ({
         ...metric,
         measurements: formatTimeMeasurements(metric),
       }));

@@ -1,10 +1,12 @@
 import { combineReducers } from 'redux';
 import metricsReducer from './metricsReducer';
-import measurementsReducer from './measurementsReducer';
+import realTimeReducer from './realTimeReducer';
+import historicalReducer from './historicalReducer';
 
 const rootReducer = combineReducers({
   metrics: metricsReducer,
-  measurements: measurementsReducer,
+  realTime: realTimeReducer,
+  historical: historicalReducer,
 });
 
 export default rootReducer;

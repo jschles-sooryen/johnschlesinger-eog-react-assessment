@@ -28,18 +28,18 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const metricsMeasurementsState = (state: RootState) => state;
+const metricsState = (state: RootState) => state.metrics;
+const realTimeState = (state: RootState) => state.realTime;
 
 const MetricRealTimeInfo: FC = () => {
   const dispatch = useDispatch();
+  const { selectedMetrics } = useSelector(metricsState);
+  const realTimeMeasurements = useSelector(realTimeState);
   const classes = useStyles();
   const isMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down('xs'));
   const {
     data, error, loading,
   } = useSubscription(newMeasurementSubscription);
-  const { metrics, measurements } = useSelector(metricsMeasurementsState);
-  const { selectedMetrics } = metrics;
-  const realTimeMeasurements: { [key: string]: any } = measurements.realTime;
 
   if (loading) return <LoadingIndicator />;
   if (error) {

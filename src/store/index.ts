@@ -9,11 +9,11 @@ export interface RootState {
   metrics: {
     selectedMetrics: string[];
   };
-  measurements: {
-    realTime: {
-      [key: string]: Measurement | null;
-    };
-    historical: any[];
+  realTime: {
+    [key: string]: Measurement | null;
+  };
+  historical: {
+    measurements: any[];
   };
 }
 
