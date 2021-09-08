@@ -1,7 +1,7 @@
 import React, { useState, useEffect, FC } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {
-  Paper, Typography, makeStyles, Grid, Button, useMediaQuery, Theme,
+  Paper, Typography, makeStyles, Grid, useMediaQuery, Theme,
 } from '@material-ui/core';
 import { ApolloQueryResult, useApolloClient } from '@apollo/client';
 import { subMinutes } from 'date-fns';
@@ -139,11 +139,6 @@ const MetricsLineChart: FC<SelectedMetricsProps> = (
       <Grid classes={{ root: classes.flexContainer }} container alignItems="center" justifyContent="space-between">
         <Grid item>
           <Typography variant="h6">Last 30 Minutes:</Typography>
-        </Grid>
-        <Grid item>
-          <Button variant="contained" color="primary" onClick={getMeasurements}>
-            Refresh
-          </Button>
         </Grid>
       </Grid>
 

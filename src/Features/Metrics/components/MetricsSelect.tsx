@@ -15,6 +15,16 @@ const useStyles = makeStyles((theme) => ({
       width: '100%',
     },
   },
+  selectMenu: {
+    [theme.breakpoints.down('xs')]: {
+      whiteSpace: 'normal',
+    },
+  },
+  chip: {
+    [theme.breakpoints.down('xs')]: {
+      margin: theme.spacing(0.5),
+    },
+  },
 }));
 
 const MetricsSelect: FC<MetricsSelectProps> = (
@@ -64,10 +74,12 @@ const MetricsSelect: FC<MetricsSelectProps> = (
         value={selectedMetrics}
         onChange={handleChange}
         disabled={!metricOptions.length}
+        classes={{ selectMenu: classes.selectMenu }}
         renderValue={(selected) => (
           <div>
             {(selected as string[]).map((value: any) => (
               <Chip
+                classes={{ root: classes.chip }}
                 key={value}
                 label={value}
                 deleteIcon={<Cancel onMouseDown={(e) => e.stopPropagation()} />}
